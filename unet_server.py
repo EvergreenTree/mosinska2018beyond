@@ -137,7 +137,7 @@ data_gen_args = dict(rotation_range=0.2,
                     fill_mode='nearest')
 myGene = trainGenerator(2,'data/membrane/train','image','label',data_gen_args,save_to_dir = None)
 model = unet()
-model.load_weights("unet_membrane.hdf5")
+# model.load_weights("unet_membrane.hdf5")
 model_checkpoint = ModelCheckpoint('unet_membrane.hdf5', monitor='loss',verbose=1, save_best_only=True)
 # training
 model.fit_generator(myGene,steps_per_epoch=2000,epochs=5,callbacks=[model_checkpoint]) # train
