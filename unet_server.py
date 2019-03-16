@@ -2,6 +2,10 @@
 
 import keras
 import numpy as np
+import os
+# import glob
+import skimage.io as io
+import skimage.transform as trans
 from keras import backend as K
 from keras.applications.vgg19 import VGG19
 from keras.preprocessing import image
@@ -66,11 +70,6 @@ def unet(pretrained_weights = None,input_size = (224,224,1)):
 
     return model
 
-# import numpy as np 
-# import os
-# import glob
-# import skimage.io as io
-# import skimage.transform as trans
 def trainGenerator(batch_size,train_path,image_folder,mask_folder,aug_dict,image_color_mode = "grayscale",
                     mask_color_mode = "grayscale",image_save_prefix  = "image",mask_save_prefix  = "mask",
                     flag_multi_class = False,num_class = 2,save_to_dir = None,target_size = (224,224),seed = 1):
