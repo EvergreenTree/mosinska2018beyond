@@ -125,25 +125,6 @@ def adjustData(img,mask,flag_multi_class,num_class):
         mask[mask <= 0.5] = 0
     return (img,mask)
 
-path = './data/'
-
-data_gen_args = dict(rotation_range=0.2,
-                    width_shift_range=0.05,
-                    height_shift_range=0.05,
-                    shear_range=0.05,
-                    zoom_range=0.05,
-                    horizontal_flip=True,
-                    fill_mode='nearest')
-myGene = trainGenerator(2,'data/membrane/train','image','label',data_gen_args,save_to_dir = None)
-model = unet()
-# model.load_weights("unet_membrane.hdf5")
-model_checkpoint = ModelCheckpoint('unet_membrane.hdf5', monitor='loss',verbose=1, save_best_only=True)
-# training
-model.fit_generator(myGene,steps_per_epoch=2000,epochs=5,callbacks=[model_checkpoint]) # train
-
-# base_model = VGG19(include_top=False,weights='imagenet',input_shape=(224,224,3))#shape cannot be changed
-# model = Model(inputs=base_model.input, outputs=base_model.get_layer('block1_conv2').output)
-
 def testGenerator(test_path,num_image = 30,target_size = (224,224),flag_multi_class = False,as_gray = True):
     for i in range(588):
         img = io.imread(os.path.join(test_path,"%d.png"%(i+0)),as_gray = as_gray)
@@ -157,18 +138,4 @@ def saveResult(save_path,npyfile,flag_multi_class = False,num_class = 2):
     for i,item in enumerate(npyfile):
         img = labelVisualize(num_class,COLOR_DICT,item) if flag_multi_class else item[:,:,0]
         io.imsave(os.path.join(save_path,"%d_predict.jpg"%(i+0)),img)
-
-# test on training data
-testGene = testGenerator('data/membrane/train/image')
-model = unet()
-model.load_weights("unet_membrane.hdf5")
-results = model.predict_generator(testGene,10,verbose=1)
-saveResult('data/membrane/trainresult/',results)
-
-# test on test data
-testGene = testGenerator('data/membrane/test')
-results = model.predict_generator(testGene,10,verbose=1)
-saveResult('data/membrane/testresult/',results)
-
-
 
